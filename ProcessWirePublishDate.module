@@ -1,0 +1,56 @@
+<?php
+/**
+*
+* "PublishDate" module
+*
+*/
+class ProcessWirePublishDate extends WireData implements Module {
+
+    /**
+     * getModuleInfo is a module required by all modules to tell ProcessWire about them
+     *
+     * @return array
+     *
+     */
+    public static function getModuleInfo() {
+         return array (
+             'title' => 'Set Publish Date',
+             'version' => 010,
+             'summary' => 'Adds a publish date to every page',
+             'singular' => true,
+             'autoload' => true
+         );
+    }
+
+    /**
+     * Initialize the module
+     *
+     * ProcessWire calls this when the module is loaded. For 'autoload' modules, this will be called
+     * when ProcessWire's API is ready. As a result, this is a good place to attach hooks.
+     *
+     */
+    public function init() {
+         // add a hook after the $pages->save
+         $this->pages->addHookAfter('save', $this, 'afterSave');
+    }
+
+    public function afterSave($event) {
+        // get page object saved
+        $page = $event->argumentsByName('page');
+
+        // only on pages that have a publish_date field
+        if(!$page->template->hasField('publish_date')) return;
+
+        if($page->is(Page::statusUnpublished)) {
+            // if unpublished, empty the field if not empty already
+            if(!$page->publish_date) return;
+            $page->publish_date = '';
+            $page->save('publish_date');
+        } else if(!$page->publish_date) {
+            // if page (published) and field not populated, add current timestamp
+            $page->publish_date = time();
+            $page->save('publish_date');
+        }
+    }
+
+}
