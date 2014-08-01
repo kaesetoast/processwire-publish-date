@@ -15,7 +15,7 @@ class ProcessWirePublishDate extends WireData implements Module {
     public static function getModuleInfo() {
          return array (
              'title' => 'Set Publish Date',
-             'version' => 010,
+             'version' => 100,
              'summary' => 'Adds a publish date to every page',
              'singular' => true,
              'autoload' => true
