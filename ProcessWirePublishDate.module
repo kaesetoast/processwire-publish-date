@@ -15,7 +15,7 @@ class ProcessWirePublishDate extends WireData implements Module, ConfigurableMod
     public static function getModuleInfo() {
          return array (
              'title' => 'Set Publish Date',
-             'version' => 100,
+             'version' => 110,
              'summary' => 'Adds a publish date to every page',
              'singular' => true,
              'autoload' => true
@@ -42,15 +42,15 @@ class ProcessWirePublishDate extends WireData implements Module, ConfigurableMod
         // get page object saved
         $page = $event->argumentsByName('page');
 
-        if(!$page->template->hasField('publish_date')) {
-            // if option is set, add the publish_date field
+        if(!$page->template->hasField('publish')) {
+            // if option is set, add the publish field
             if ($this->autoadd_publish_date) {
-                $field = $this->fields->get('publish_date');
+                $field = $this->fields->get('publish');
                 // add field if not created already
                 if (!$field) {
                     $field = new Field();
                     $field->type = $this->modules->get('FieldtypeDatetime');
-                    $field->name = 'publish_date';
+                    $field->name = 'publish';
                     $field->collapsed = 4;
                     $field->save();
                 }
@@ -64,13 +64,13 @@ class ProcessWirePublishDate extends WireData implements Module, ConfigurableMod
 
         if($page->is(Page::statusUnpublished)) {
             // if unpublished, empty the field if not empty already
-            if(!$page->publish_date) return;
-            $page->publish_date = '';
-            $page->save('publish_date');
-        } else if(!$page->publish_date) {
+            if(!$page->publish) return;
+            $page->publish = '';
+            $page->save('publish');
+        } else if(!$page->publish) {
             // if page (published) and field not populated, add current timestamp
-            $page->publish_date = time();
-            $page->save('publish_date');
+            $page->publish = time();
+            $page->save('publish');
         }
     }
 
@@ -84,9 +84,9 @@ class ProcessWirePublishDate extends WireData implements Module, ConfigurableMod
 
         $f = wire('modules')->get('InputfieldCheckbox'); 
         $f->attr('name', 'autoadd_publish_date'); 
-        $f->label = __('Add publish_date to all pages automatically'); 
-        $f->description = __('If you activate this option, ProcessWire will automatically add a publish_date field to all templates');
-        $f->notes = __('If you leave this option unchecked, you will have to create a publish_date field manually and add it to the templates you want it to appear on.'); 
+        $f->label = __('Add \'publish\' to all pages automatically'); 
+        $f->description = __('If you activate this option, ProcessWire will automatically add a \'publish\' field to all templates');
+        $f->notes = __('If you leave this option unchecked, you will have to create a \'publish\' field manually and add it to the templates you want it to appear on.'); 
         $f->attr('checked', isset($data['autoadd_publish_date']) ? $data['autoadd_publish_date'] : ''); 
         $wrap->add($f); 
 
