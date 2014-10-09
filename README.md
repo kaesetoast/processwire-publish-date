@@ -12,4 +12,5 @@ This option is disabled by default. If you don't want to use it, you'll need to 
 
 ## Changelog
 
+* 2014-10-09   v1.2.0   added option to change fieldname
 * 2014-08-05   v1.1.0   changed field name to 'publish'
